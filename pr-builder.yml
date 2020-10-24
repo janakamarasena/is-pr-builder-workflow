@@ -1,0 +1,67 @@
+name: pr-builder
+
+on:
+  pull_request:
+    types: [labeled]
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    if: ${{ github.event.label.name == 'trigger-pr-builder' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: repo-info
+      run: |
+        echo ${{github.event.pull_request.html_url}}
+    - name: Cache Maven packages
+      id: cache-maven-m2
+      uses: actions/cache@v2
+      with:
+       path: ~/.m2
+       key: ${{ runner.os }}-pr-builder
+    - name: Check cache hit
+      if: steps.cache-maven-m2.outputs.cache-hit == 'true'
+      run: echo "cache hit status " ${{steps.cache-maven-m2.outputs.cache-hit}}
+    - name: Build with Maven
+      env:
+        PR_LINK: ${{github.event.pull_request.html_url}}
+      run: |
+        wget https://raw.githubusercontent.com/janakamarasena/is-pr-builder-workflow/main/builder.sh
+        bash builder.sh
+    - name: Archive PR diff file
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-pr-diff
+        path: |
+          ${{github.event.pull_request.base.repo.name}}/diff.diff
+        if-no-files-found: warn
+    - name: Archive repo mvn build log
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-mvn-build-log
+        path: |
+          ${{github.event.pull_request.base.repo.name}}/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive repo surefire reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-surefire-report
+        path: |
+          ${{github.event.pull_request.base.repo.name}}/**/surefire-reports
+        if-no-files-found: warn
+    - name: Archive product-is mvn build log
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-mvn-build-log
+        path: |
+          product-is/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive product-is surefire reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-surefire-report
+        path: |
+          product-is/**/surefire-reports
+        if-no-files-found: warn
