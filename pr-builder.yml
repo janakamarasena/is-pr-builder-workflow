@@ -21,8 +21,6 @@ jobs:
       with:
        path: ~/.m2
        key: ${{ runner.os }}-pr-builder
-    - name: Check cache hit
-      run: echo "cache hit status " ${{steps.cache-maven-m2.outputs.cache-hit}}
     - name: Build with Maven
       env:
         PR_LINK: ${{github.event.pull_request.html_url}}
