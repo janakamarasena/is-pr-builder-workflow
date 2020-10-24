@@ -12,22 +12,27 @@ jobs:
     if: ${{ github.event.label.name == 'trigger-pr-builder' }}
     runs-on: ubuntu-latest
     steps:
-    - name: repo-info
+    - name: Buid init
       run: |
         echo ${{github.event.pull_request.html_url}}
-    - name: Cache Maven packages
+        wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
+    - name: Cache maven packages
       id: cache-maven-m2
       uses: actions/cache@v2
       with:
        path: ~/.m2
-       key: ${{ runner.os }}-pr-builder
-    - name: Build with Maven
+       key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
+       restore-keys: |
+         ${{ runner.os }}-pr-builder-
+         ${{ runner.os }}-pr-builder
+    - name: Run PR builder
       env:
         PR_LINK: ${{github.event.pull_request.html_url}}
       run: |
         wget https://raw.githubusercontent.com/janakamarasena/is-pr-builder-workflow/main/builder.sh
         bash builder.sh
     - name: Archive PR diff file
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: repo-pr-diff
@@ -35,6 +40,7 @@ jobs:
           ${{github.event.pull_request.base.repo.name}}/diff.diff
         if-no-files-found: warn
     - name: Archive repo mvn build log
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: repo-mvn-build-log
@@ -42,6 +48,7 @@ jobs:
           ${{github.event.pull_request.base.repo.name}}/mvn-build.log
         if-no-files-found: warn
     - name: Archive repo surefire reports
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: repo-surefire-report
@@ -49,6 +56,7 @@ jobs:
           ${{github.event.pull_request.base.repo.name}}/**/surefire-reports
         if-no-files-found: warn
     - name: Archive product-is mvn build log
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: product-is-mvn-build-log
@@ -56,6 +64,7 @@ jobs:
           product-is/mvn-build.log
         if-no-files-found: warn
     - name: Archive product-is surefire reports
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: product-is-surefire-report
