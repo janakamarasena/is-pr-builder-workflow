@@ -32,7 +32,7 @@ jobs:
       env:
         PR_LINK: ${{github.event.inputs.pr}}
       run: |
-        wget https://raw.githubusercontent.com/omindu/test/master/builder.sh
+        wget https://raw.githubusercontent.com/janakamarasena/is-pr-builder-workflow/main/builder.sh
         bash builder.sh
     - name: Archive PR diff file
       if: always()
