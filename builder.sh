@@ -2,7 +2,9 @@
 wget https://raw.githubusercontent.com/mevan-karu/pom_version_property_finder/master/src/version_property_finder.py
 echo ""
 echo "=========================================================="
+PR_LINK=${PR_LINK%/}
 echo "    PR_LINK: $PR_LINK"
+echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
 REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
@@ -11,6 +13,7 @@ PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
 echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
+echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 
 
