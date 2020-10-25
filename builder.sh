@@ -105,7 +105,7 @@ echo ""
 
 sed -i "s/<$VERSION_PROPERTY_KEY>.*<\/$VERSION_PROPERTY_KEY>/<$VERSION_PROPERTY_KEY>$DEPENDENCY_VERSION<\/$VERSION_PROPERTY_KEY>/" pom.xml
 cat pom.xml
-mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+mvn clean install --batch-mode | tee mvn-build.log
 
 PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
 PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
