@@ -77,7 +77,8 @@ echo "=========================================================="
 echo ""
 
 REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-REPO_TEST_RESULT=$(sed -n -e '/Results :/,/Tests run:/ p' mvn-build.log)
+REPO_TEST_RESULT_1=$(sed -n -e '/Results :/,/Tests run:/ p' mvn-build.log)
+REPO_TEST_RESULT_2=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
 
 REPO_FINAL_RESULT=$(
   echo "==========================================================="
@@ -86,7 +87,9 @@ REPO_FINAL_RESULT=$(
   echo ""
   echo "Built version: $DEPENDENCY_VERSION"
   echo ""
-  echo "$REPO_TEST_RESULT"
+  echo "$REPO_TEST_RESULT_1"
+  echo ""
+  echo "$REPO_TEST_RESULT_2"
 )
 
 REPO_BUILD_RESULT_LOG_TEMP=$(echo "$REPO_FINAL_RESULT" | sed 's/$/%0A/')
