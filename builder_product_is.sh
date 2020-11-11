@@ -2,6 +2,7 @@
 echo ""
 echo "=========================================================="
 echo "    PR_LINK: $PR_LINK"
+echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
 REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
