@@ -34,8 +34,8 @@ jobs:
       env:
         PR_LINK: ${{github.event.inputs.pr}}
       run: |
-        wget https://raw.githubusercontent.com/janakamarasena/is-pr-builder-workflow/main/build_complete.sh
-        bash builder.sh
+        wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder.sh
+        bash pr-builder.sh
     - name: Archive PR diff file
       if: always()
       uses: actions/upload-artifact@v2
