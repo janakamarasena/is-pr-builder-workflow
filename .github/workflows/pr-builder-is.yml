@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Build init
+      run: |
+        owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4
+        repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5
+        pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7
+        curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{ secrets.COMMENT_TOKEN }}' -d '{"body":"PR builder completed\nLink: https://github.com/janakamarasena/is-pr-builder-workflow/actions/runs/${{github.run_id}}"}'
     - name: Print Input
       run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
     - name: Build init
