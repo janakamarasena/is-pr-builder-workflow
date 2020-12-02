@@ -20,7 +20,7 @@ jobs:
         owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
         repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
         pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-        curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{ secrets.COMMENT_TOKEN }}' -d '{"body":"PR builder completed\nLink: https://github.com/janakamarasena/is-pr-builder-workflow/actions/runs/${{GITHUB_RUN_ID}} $GITHUB_RUN_ID"}'
+        curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{ secrets.COMMENT_TOKEN }}' -d '{"body":"PR builder completed\nLink: https://github.com/janakamarasena/is-pr-builder-workflow/actions/runs/${{ github.run_id }} $GITHUB_RUN_ID"}'
     - name: Build init
       run: |
         wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
